@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cleanspring
+  data:
+    mongodb:
+      database: cleanspring            # 접속할 DB
+      authentication-database: admin   # 접속할 계정이 위치한 DB
+      host: localhost
+      port: 27017
+      username: stupidbox
+      password: admin1234!
+
+springdoc:
+  swagger-ui:
+    path: /api-ui
