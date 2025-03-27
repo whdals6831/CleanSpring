@@ -9,4 +9,6 @@ public interface UserUseCase {
     User registerUser(RegisterUserCommand command);
 
     List<User> getAllUser();
+
+    void deleteUser(String id);
 }

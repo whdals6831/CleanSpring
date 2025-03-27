@@ -1,7 +1,7 @@
 package com.jjm.cleanspring.application.port.in.user.command;
 
+import com.jjm.cleanspring.application.port.in.SelfValidating;
 import com.jjm.cleanspring.domain.User;
-import com.jjm.cleanspring.infrastructure.abstraction.SelfValidating;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -36,10 +36,10 @@ public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
 
     public User toEntity() {
         return User.builder()
-                .userName(userName)
-                .password(password)
-                .email(email)
-                .createdAt(LocalDateTime.now())
-                .build();
+                   .userName(userName)
+                   .password(password)
+                   .email(email)
+                   .createdAt(LocalDateTime.now())
+                   .build();
     }
 }

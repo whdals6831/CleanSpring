@@ -1,5 +1,7 @@
 package com.jjm.cleanspring.infrastructure.exception;
 
+import com.jjm.cleanspring.adapter.in.web.dto.ErrorCode;
+import com.jjm.cleanspring.adapter.in.web.dto.ResponseDto;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -7,42 +9,83 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.NoSuchElementException;
+
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
-        ErrorCode errorCode = ErrorCode.FAIL_INPUT_VALIDATION;
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(errorCode.getMessage());
-        sb.append("[");
-        sb.append(ex.getMessage());
-        sb.append("]");
-
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(errorCode.getStatus())
-                .code(errorCode.getCode())
-                .message(sb.toString())
-                .build();
+    /**
+     * 잘못된 값이 전달되었을 때 예외 처리
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDto<Object>> handleIllegalArgumentException(IllegalArgumentException e) {
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
 
         return ResponseEntity.status(errorCode.getStatus())
-                .body(errorResponse);
+                             .body(ResponseDto.error(errorCode, e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        log.error("Unhandled Exception: ", ex);
-
-        ErrorCode errorCode = ErrorCode.UNEXPRECTED_ERROR;
-
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(errorCode.getStatus())
-                .code(errorCode.getCode())
-                .message(errorCode.getMessage())
-                .build();
+    /**
+     * 요청한 데이터가 없을 때 예외 처리
+     */
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<ResponseDto<Object>> handleNoSuchElementException(NoSuchElementException e) {
+        ErrorCode errorCode = ErrorCode.NOT_FOUND;
 
         return ResponseEntity.status(errorCode.getStatus())
-                .body(errorResponse);
+                             .body(ResponseDto.error(errorCode, e.getMessage()));
+    }
+
+    /**
+     * 사용자 인증 관련 예외 처리
+     */
+//    @ExceptionHandler(AuthenticationException.class)
+//    public ResponseEntity<ResponseDto<Object>> handleAuthenticationException(AuthenticationException e) {
+//        ErrorCode errorCode;
+//
+//        if (e.getMessage()
+//                .contains("Jwt expired")) {
+//            errorCode = ErrorCode.ACCESS_TOKEN_EXPIRED;
+//        } else {
+//            errorCode = ErrorCode.UNAUTHORIZED_ACCESS;
+//        }
+//
+//        return ResponseEntity.status(errorCode.getStatus())
+//                .body(ResponseDto.error(errorCode));
+//    }
+
+    /**
+     * 접근 권한 예외 처리
+     */
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<ResponseDto<Object>> handleAccessDeniedException(AccessDeniedException e) {
+//        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
+//
+//        return ResponseEntity.status(errorCode.getStatus())
+//                .body(ResponseDto.error(errorCode));
+//    }
+
+    /**
+     * 입력값 유효성 처리 예외 처리 (SelfValidating)
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResponseDto<Object>> handleConstraintViolationException(ConstraintViolationException e) {
+        ErrorCode errorCode = ErrorCode.VALIDATION_FAILED;
+
+        return ResponseEntity.status(errorCode.getStatus())
+                             .body(ResponseDto.error(errorCode, e.getMessage()));
+    }
+
+    /**
+     * 예상치 못한 내부 서버 예외 처리
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDto<Object>> handleException(Exception e) {
+        log.error("Unhandled Exception: ", e);
+
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+
+        return ResponseEntity.status(errorCode.getStatus())
+                             .body(ResponseDto.error(errorCode));
     }
 }

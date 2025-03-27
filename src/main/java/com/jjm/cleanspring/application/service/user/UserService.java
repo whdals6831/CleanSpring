@@ -20,7 +20,7 @@ public class UserService implements UserUseCase {
     @Override
     public User registerUser(RegisterUserCommand command) {
         if (!Objects.equals(command.getPassword(), command.getConfirmPassword())) {
-            throw new RuntimeException("입력한 비밀번호가 서로 일치하지 않습니다.");
+            throw new IllegalArgumentException("입력한 비밀번호가 서로 일치하지 않습니다.");
         }
 
         User user = command.toEntity();
@@ -31,5 +31,10 @@ public class UserService implements UserUseCase {
     @Override
     public List<User> getAllUser() {
         return userPort.findAllUser();
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        userPort.deleteUser(id);
     }
 }

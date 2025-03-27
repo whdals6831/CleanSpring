@@ -14,7 +14,7 @@ public class SwaggerConfig {
 
     private Info createApiInfo() {
         return new Info().version("v1.0.0")
-                .title("CleanSpring API")
-                .description("CleanSpring API 목록입니다.");
+                         .title("CleanSpring API")
+                         .description("CleanSpring API 목록입니다.");
     }
 }

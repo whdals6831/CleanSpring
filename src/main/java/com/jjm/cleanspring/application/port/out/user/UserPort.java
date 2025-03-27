@@ -8,4 +8,6 @@ public interface UserPort {
     User saveUser(User user);
 
     List<User> findAllUser();
+
+    void deleteUser(String id);
 }

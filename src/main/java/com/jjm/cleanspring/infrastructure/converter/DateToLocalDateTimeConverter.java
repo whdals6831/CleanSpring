@@ -16,8 +16,8 @@ public class DateToLocalDateTimeConverter implements Converter<Date, LocalDateTi
     @Override
     public LocalDateTime convert(Date source) {
         LocalDateTime localDateTime = source.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDateTime();
 
         return localDateTime.minusHours(KST_OFFSET_HOURS);
     }

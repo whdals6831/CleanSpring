@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.infrastructure.abstraction;
+package com.jjm.cleanspring.application.port.in;
 
 import jakarta.validation.*;
 
