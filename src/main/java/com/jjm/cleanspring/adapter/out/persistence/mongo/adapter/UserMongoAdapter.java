@@ -6,6 +6,10 @@ import com.jjm.cleanspring.adapter.out.persistence.mongo.repository.UserMongoRep
 import com.jjm.cleanspring.application.port.out.user.UserPort;
 import com.jjm.cleanspring.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,10 +20,11 @@ import java.util.NoSuchElementException;
 public class UserMongoAdapter implements UserPort {
     private final UserMongoRepository repository;
     private final UserMapper mapper;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public User saveUser(User user) {
-        UserMongoEntity entity = mapper.toUserMongoEntity(user);
+        UserMongoEntity entity = mapper.toEntity(user);
         UserMongoEntity savedEntity = repository.save(entity);
 
         return mapper.toUser(savedEntity);
@@ -38,6 +43,23 @@ public class UserMongoAdapter implements UserPort {
                       .isEmpty()) {
             throw new NoSuchElementException("해당 유저는 존재하지 않습니다.");
         }
+
         repository.deleteById(id);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        if (repository.findById(user.getId())
+                      .isEmpty()) {
+            throw new NoSuchElementException("해당 유저는 존재하지 않습니다.");
+        }
+
+        Query query = new Query(Criteria.where("_id")
+                                        .is(user.getId()));
+        Update update = new Update().set("name", user.getName())
+                                    .set("email", user.getEmail())
+                                    .set("updated_at", user.getUpdatedAt());
+
+        mongoTemplate.updateFirst(query, update, UserMongoEntity.class);
     }
 }

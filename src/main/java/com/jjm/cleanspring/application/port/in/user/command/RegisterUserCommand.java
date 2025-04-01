@@ -22,22 +22,27 @@ public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
     @NotBlank(message = "확인 비밀번호는 필수 입력 값입니다.")
     private String confirmPassword;
 
+    @NotBlank(message = "이름은 필수 입력 값입니다.")
+    private String name;
+
     @Email(message = "올바른 이메일 형식에 맞게 입력해주세요.")
     private String email;
 
     @Builder
-    public RegisterUserCommand(String userName, String password, String confirmPassword, String email) {
+    public RegisterUserCommand(String userName, String password, String confirmPassword, String name, String email) {
         this.userName = userName;
         this.password = password;
         this.confirmPassword = confirmPassword;
+        this.name = name;
         this.email = email;
         this.validateSelf();
     }
 
-    public User toEntity() {
+    public User toUser() {
         return User.builder()
                    .userName(userName)
                    .password(password)
+                   .name(name)
                    .email(email)
                    .createdAt(LocalDateTime.now())
                    .build();

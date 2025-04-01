@@ -10,4 +10,6 @@ public interface UserPort {
     List<User> findAllUser();
 
     void deleteUser(String id);
+
+    void updateUser(User user);
 }

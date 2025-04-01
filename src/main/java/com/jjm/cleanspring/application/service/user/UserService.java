@@ -1,6 +1,7 @@
 package com.jjm.cleanspring.application.service.user;
 
 import com.jjm.cleanspring.application.port.in.user.command.RegisterUserCommand;
+import com.jjm.cleanspring.application.port.in.user.command.UpdateUserCommand;
 import com.jjm.cleanspring.application.port.in.user.usecase.UserUseCase;
 import com.jjm.cleanspring.application.port.out.user.UserPort;
 import com.jjm.cleanspring.domain.User;
@@ -23,7 +24,7 @@ public class UserService implements UserUseCase {
             throw new IllegalArgumentException("입력한 비밀번호가 서로 일치하지 않습니다.");
         }
 
-        User user = command.toEntity();
+        User user = command.toUser();
 
         return userPort.saveUser(user);
     }
@@ -36,5 +37,12 @@ public class UserService implements UserUseCase {
     @Override
     public void deleteUser(String id) {
         userPort.deleteUser(id);
+    }
+
+    @Override
+    public void updateUser(UpdateUserCommand command) {
+        User user = command.toUser();
+
+        userPort.updateUser(user);
     }
 }
