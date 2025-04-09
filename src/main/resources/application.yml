@@ -13,3 +13,6 @@ spring:
 springdoc:
   swagger-ui:
     path: /api-ui
+
+jwt: # openssl rand -hex 32 로 생성된 랜덤값
+  secret: 6557838d5c96dd23714a7c4d2d57e161557d07b214bdcd3990f4a7af4627fa67

@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.infrastructure.security;
+package com.jjm.cleanspring.infrastructure.config.security;
 
 //@Component
 //public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint

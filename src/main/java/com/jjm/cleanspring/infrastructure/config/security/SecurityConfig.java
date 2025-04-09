@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.infrastructure.config;
+package com.jjm.cleanspring.infrastructure.config.security;
 
 //@Configuration
 //@RequiredArgsConstructor
@@ -6,6 +6,7 @@ package com.jjm.cleanspring.infrastructure.config;
 //    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 //    private final CustomAccessDeniedHandler accessDeniedHandler;
 //
+
 //    @Bean
 //    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http.authorizeHttpRequests(

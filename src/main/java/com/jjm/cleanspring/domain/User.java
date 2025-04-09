@@ -2,12 +2,10 @@ package com.jjm.cleanspring.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 public class User {
     private String id;

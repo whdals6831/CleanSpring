@@ -26,9 +26,8 @@ public class LayerDependencyTest {
 
     /**
      * 레이어검사 : 모든 계층은 올바른 의존성을 가져야한다.
-     * Domain <- Application, Adapter
-     * Application <- Adapter
-     * Adapter <-> Infrastructure
+     * 화살표는 의존하는 방향이다.
+     * Domain <- Application <- Adapter <- Infrastructure
      */
     @ArchTest()
     public LayeredArchitecture layer_dependencies_are_respected = layeredArchitecture()
@@ -42,13 +41,13 @@ public class LayerDependencyTest {
             .layer(DOMAIN_LAYER)
             .definedBy(DOMAIN_PACKAGE)
             .whereLayer(INFRASTRUCTURE_LAYER)
-            .mayOnlyBeAccessedByLayers(ADAPTER_LAYER)
+            .mayNotBeAccessedByAnyLayer()
             .whereLayer(ADAPTER_LAYER)
             .mayOnlyBeAccessedByLayers(INFRASTRUCTURE_LAYER)
             .whereLayer(APPLICATION_LAYER)
-            .mayOnlyBeAccessedByLayers(ADAPTER_LAYER)
+            .mayOnlyBeAccessedByLayers(ADAPTER_LAYER, INFRASTRUCTURE_LAYER)
             .whereLayer(DOMAIN_LAYER)
-            .mayOnlyBeAccessedByLayers(APPLICATION_LAYER, ADAPTER_LAYER);
+            .mayOnlyBeAccessedByLayers(APPLICATION_LAYER, ADAPTER_LAYER, INFRASTRUCTURE_LAYER);
 
     /**
      * 필드주입검사 : 모든 클래스는 필드주입을 사용하지 않는다.

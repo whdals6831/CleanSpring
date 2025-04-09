@@ -66,7 +66,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //    }
 
     /**
-     * 입력값 유효성 처리 예외 처리 (SelfValidating)
+     * 입력값 유효성 처리 예외 처리
+     * -> SelfValidating 에서 검증 실패된 입력값
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ResponseDto<Object>> handleConstraintViolationException(ConstraintViolationException e) {

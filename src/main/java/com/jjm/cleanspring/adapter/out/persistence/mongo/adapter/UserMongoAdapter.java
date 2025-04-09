@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +29,17 @@ public class UserMongoAdapter implements UserPort {
         UserMongoEntity savedEntity = repository.save(entity);
 
         return mapper.toUser(savedEntity);
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        Optional<UserMongoEntity> entity = repository.findByUserName(userName);
+
+        if (entity.isEmpty()) {
+            throw new NoSuchElementException("해당 유저는 존재하지 않습니다.");
+        }
+
+        return mapper.toUser(entity.get());
     }
 
     @Override
