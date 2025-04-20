@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
     @Pattern(regexp = "^\\S+$", message = "공백이 포함되면 안됩니다.")
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
@@ -38,13 +38,12 @@ public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
         this.validateSelf();
     }
 
-    public User toUser() {
+    public User toUser(String passwordHash) {
         return User.builder()
                    .userName(userName)
-                   .password(password)
+                   .passwordHash(passwordHash)
                    .name(name)
                    .email(email)
-                   .createdAt(LocalDateTime.now())
                    .build();
     }
 }

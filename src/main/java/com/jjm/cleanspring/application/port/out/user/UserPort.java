@@ -7,11 +7,17 @@ import java.util.List;
 public interface UserPort {
     User saveUser(User user);
 
+    User findById(Long id);
+
     User findByUserName(String userName);
+
+    boolean existsById(Long id);
+
+    boolean existsByUserName(String userName);
 
     List<User> findAllUser();
 
-    void deleteUser(String id);
+    void deleteUser(Long id);
 
     void updateUser(User user);
 }

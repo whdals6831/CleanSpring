@@ -5,7 +5,7 @@ import com.jjm.cleanspring.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record UserResponse(String id,
+public record UserResponse(Long id,
                            String user,
                            String userName,
                            String email,
@@ -20,7 +20,7 @@ public record UserResponse(String id,
 
     public static List<UserResponse> toDtoList(List<User> userList) {
         return userList.stream()
-                       .map(user -> UserResponse.toDto(user))
+                       .map(UserResponse::toDto)
                        .toList();
     }
 }

@@ -1,6 +1,5 @@
 package com.jjm.cleanspring.infrastructure.config.security.jwt;
 
-import com.jjm.cleanspring.infrastructure.exception.JwtAuthenticationException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,24 +21,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // 1) Request Header에서 JWT 토큰 추출
-        String token = extractToken(request);
-
-        if (token == null) {
-            System.out.println("토큰이 존재하지 않습니다.");
-        }
-
-        // 2) 토큰이 존재하면 인증 시도
         try {
-            Authentication authentication = jwtAuthenticationService.authenticateToken(token);
+            // 1) Request Header에서 JWT 토큰 추출
+            String token = extractToken(request);
 
-            // 3) 인증 성공 시 SecurityContext에 등록
-            SecurityContextHolder.getContext()
-                                 .setAuthentication(authentication);
+            if (token != null && !token.isBlank()) {
+                // 2) 토큰이 존재하면 인증 시도
+                Authentication authentication = jwtAuthenticationService.authenticateToken(token);
+
+                // 3) 인증 성공 시 SecurityContext에 등록
+                SecurityContextHolder.getContext()
+                                     .setAuthentication(authentication);
+            }
         }
-        catch (JwtAuthenticationException e) {
-            // JWT 검증 실패 시 SecurityContext에 인증 정보 세팅하지 않음
-            System.out.println("인증 실패");
+        catch (Exception e) {
+            // Custom Exception을 EntryPoint에서 받을 수 있도록 담아줌
+            request.setAttribute("exception", e);
         }
 
         filterChain.doFilter(request, response);
@@ -52,12 +49,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String prefix = "Bearer ";
         String bearerToken = request.getHeader("Authorization");
 
-        if (bearerToken.startsWith(prefix)) {
+        if (bearerToken != null && bearerToken.startsWith(prefix)) {
             return bearerToken.substring(prefix.length())
                               .trim();
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 }

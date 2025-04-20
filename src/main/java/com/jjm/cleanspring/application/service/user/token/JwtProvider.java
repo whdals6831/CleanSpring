@@ -1,5 +1,6 @@
-package com.jjm.cleanspring.infrastructure.config.security.jwt;
+package com.jjm.cleanspring.application.service.user.token;
 
+import com.jjm.cleanspring.application.exception.JwtAuthenticationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -28,7 +31,7 @@ public class JwtProvider {
      *
      * @param id       사용자 ID
      * @param userName 사용자명
-     * @return
+     * @return 생성한 토큰 문자열
      */
     public String generateToken(String id,
                                 String userName) {
@@ -49,7 +52,7 @@ public class JwtProvider {
      *
      * @param id       사용자 ID
      * @param userName 사용자명
-     * @return
+     * @return 생성한 리프레시 토큰 문자열
      */
     public String generateRefreshToken(String id,
                                        String userName) {
@@ -68,8 +71,8 @@ public class JwtProvider {
     /**
      * 토큰에서 사용자 ID 추출 (subject)
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 사용자 ID
      */
     public String extractId(String token) {
         return Jwts.parser()
@@ -83,8 +86,8 @@ public class JwtProvider {
     /**
      * 토큰에서 사용자명 추출 (userName 클레임)
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 사용자명
      */
     public String extractUserName(String token) {
         return Jwts.parser()
@@ -96,34 +99,52 @@ public class JwtProvider {
     }
 
     /**
-     * 토큰 유효성 검사
+     * 토큰에서 만료일자 추출
      *
-     * @param token
-     * @return
+     * @param token 토큰 문자열
+     * @return 만료일자
      */
-    public Boolean validateToken(String token) {
+    public LocalDateTime extractExpiredDate(String token) {
+        return Jwts.parser()
+                   .verifyWith(key)
+                   .build()
+                   .parseSignedClaims(token)
+                   .getPayload()
+                   .getExpiration()
+                   .toInstant()
+                   .atZone(ZoneId.systemDefault())
+                   .toLocalDateTime();
+    }
+
+    /**
+     * 토큰 유효성 검사
+     * 다음 조건을 만족해야 함
+     * 1. 만료되지 않음
+     * 2. 올바른 토큰 문자열
+     * 3. 지원하는 토큰 형식
+     *
+     * @param token 토큰 문자열
+     * @return 유효성 검사 통과 여부
+     */
+    public void validateToken(String token) {
         try {
             Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token);
-            return true;
-
         }
         catch (SecurityException |
                MalformedJwtException e) {
-            System.out.println("Invalid JWT Token");
+            throw new JwtAuthenticationException("Invalid JWT Token");
         }
         catch (ExpiredJwtException e) {
-            System.out.println("Expired JWT Token");
+            throw new JwtAuthenticationException("Expired JWT Token");
         }
         catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT Token");
+            throw new JwtAuthenticationException("Unsupported JWT Token");
         }
         catch (IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty.");
+            throw new JwtAuthenticationException("JWT claims string is empty.");
         }
-
-        return false;
     }
 }

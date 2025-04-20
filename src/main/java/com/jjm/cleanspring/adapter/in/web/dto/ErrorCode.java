@@ -21,7 +21,8 @@ public enum ErrorCode {
      */
     ACCESS_TOKEN_EXPIRED("E2001", HttpStatus.UNAUTHORIZED, "만료된 Access Token 입니다."),
     FORBIDDEN_ACCESS("E2002", HttpStatus.FORBIDDEN, "권한이 없는 사용자의 요청입니다."),
-    UNAUTHORIZED_REQUEST("E2003", HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자의 요청입니다.");
+    UNAUTHORIZED_REQUEST("E2003", HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자의 요청입니다."),
+    INVALID_JWT_ERROR("E2004", HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰 요청입니다.");
 
     private final String errorCode;
     private final HttpStatus status;

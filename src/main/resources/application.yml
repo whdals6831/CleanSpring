@@ -1,18 +1,44 @@
 spring:
   application:
     name: cleanspring
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cleanspring
+    username: admin
+    password: admin123
+    driver-class-name: org.postgresql.Driver
+
+  # JPA 설정
+  jpa:
+    database: POSTGRESQL
+    defer-datasource-initialization: true
+    hibernate:
+      # 개발 : create, create-drop, update
+      # 테스트 : update, validate
+      # 운영 : validate, none
+      ddl-auto: create
+    open-in-view: false
+    #    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 10
+        highlight_sql: true
+
   data:
     mongodb:
       database: cleanspring            # 접속할 DB
-      authentication-database: admin   # 접속할 계정이 위치한 DB
       host: localhost
       port: 27017
-      username: stupidbox
-      password: admin1234!
+      authentication-database: admin   # 접속할 계정이 위치한 DB
+      username: admin
+      password: admin123
 
 springdoc:
+  api-docs:
+    path: /api-docs
   swagger-ui:
     path: /api-ui
 
-jwt: # openssl rand -hex 32 로 생성된 랜덤값
-  secret: 6557838d5c96dd23714a7c4d2d57e161557d07b214bdcd3990f4a7af4627fa67
+jwt:
+  secret: 6557838d5c96dd23714a7c4d2d57e161557d07b214bdcd3990f4a7af4627fa67 # openssl rand -hex 32 로 생성된 랜덤값

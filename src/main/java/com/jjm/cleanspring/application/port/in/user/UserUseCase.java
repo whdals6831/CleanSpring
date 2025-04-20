@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.application.port.in.user.usecase;
+package com.jjm.cleanspring.application.port.in.user;
 
 import com.jjm.cleanspring.application.port.in.user.command.RegisterUserCommand;
 import com.jjm.cleanspring.application.port.in.user.command.UpdateUserCommand;
@@ -11,7 +11,7 @@ public interface UserUseCase {
 
     List<User> getAllUser();
 
-    void deleteUser(String id);
+    void deleteUser(Long id);
 
     void updateUser(UpdateUserCommand command);
 }

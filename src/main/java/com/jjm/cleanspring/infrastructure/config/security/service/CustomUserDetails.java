@@ -10,7 +10,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private String id;
+    private Long id;
     private String userName;
 
     @Override
@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority("USER"));
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 

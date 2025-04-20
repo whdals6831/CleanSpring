@@ -7,12 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class UpdateUserCommand extends SelfValidating<UpdateUserCommand> {
     @NotBlank(message = "id는 필수 입력 값입니다.")
-    private String id;
+    private Long id;
 
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     private String name;
@@ -21,7 +19,7 @@ public class UpdateUserCommand extends SelfValidating<UpdateUserCommand> {
     private String email;
 
     @Builder
-    public UpdateUserCommand(String id, String name, String email) {
+    public UpdateUserCommand(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -33,7 +31,6 @@ public class UpdateUserCommand extends SelfValidating<UpdateUserCommand> {
                    .id(id)
                    .name(name)
                    .email(email)
-                   .updatedAt(LocalDateTime.now())
                    .build();
     }
 }

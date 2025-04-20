@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.architecture;
+package com.jjm.cleanspring.unit.architecture;
 
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;

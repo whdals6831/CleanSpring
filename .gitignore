@@ -13,9 +13,6 @@
 .idea/**/shelf
 .idea/**/codeStyleConfig.xml
 
-# 프로젝트 root에 있는 out 폴더만 무시
-/out/
-
 # 자동 생성된 generated 폴더 무시
 src/main/generated/*
 
@@ -59,6 +56,9 @@ cmake-build-*/
 
 # File-based project format
 *.iws
+
+# IntelliJ (프로젝트 root에 있는 out 폴더만 무시)
+/out/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

@@ -2,9 +2,12 @@ package com.jjm.cleanspring.infrastructure.exception;
 
 import com.jjm.cleanspring.adapter.in.web.dto.ErrorCode;
 import com.jjm.cleanspring.adapter.in.web.dto.ResponseDto;
+import com.jjm.cleanspring.application.exception.JwtAuthenticationException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -37,33 +40,37 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Jwt 인증 예외 처리
+     */
+    @ExceptionHandler(JwtAuthenticationException.class)
+    public ResponseEntity<ResponseDto<Object>> handleJwtAuthenticationException(JwtAuthenticationException e) {
+        ErrorCode errorCode = ErrorCode.INVALID_JWT_ERROR;
+
+        return ResponseEntity.status(errorCode.getStatus())
+                             .body(ResponseDto.error(errorCode, e.getMessage()));
+    }
+
+    /**
      * 사용자 인증 관련 예외 처리
      */
-//    @ExceptionHandler(AuthenticationException.class)
-//    public ResponseEntity<ResponseDto<Object>> handleAuthenticationException(AuthenticationException e) {
-//        ErrorCode errorCode;
-//
-//        if (e.getMessage()
-//                .contains("Jwt expired")) {
-//            errorCode = ErrorCode.ACCESS_TOKEN_EXPIRED;
-//        } else {
-//            errorCode = ErrorCode.UNAUTHORIZED_ACCESS;
-//        }
-//
-//        return ResponseEntity.status(errorCode.getStatus())
-//                .body(ResponseDto.error(errorCode));
-//    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ResponseDto<Object>> handleAuthenticationException(AuthenticationException e) {
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED_REQUEST;
+
+        return ResponseEntity.status(errorCode.getStatus())
+                             .body(ResponseDto.error(errorCode, e.getMessage()));
+    }
 
     /**
      * 접근 권한 예외 처리
      */
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ResponseEntity<ResponseDto<Object>> handleAccessDeniedException(AccessDeniedException e) {
-//        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
-//
-//        return ResponseEntity.status(errorCode.getStatus())
-//                .body(ResponseDto.error(errorCode));
-//    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseDto<Object>> handleAccessDeniedException(AccessDeniedException e) {
+        ErrorCode errorCode = ErrorCode.FORBIDDEN_ACCESS;
+
+        return ResponseEntity.status(errorCode.getStatus())
+                             .body(ResponseDto.error(errorCode));
+    }
 
     /**
      * 입력값 유효성 처리 예외 처리
