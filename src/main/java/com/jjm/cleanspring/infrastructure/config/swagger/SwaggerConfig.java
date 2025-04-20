@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.infrastructure.config;
+package com.jjm.cleanspring.infrastructure.config.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

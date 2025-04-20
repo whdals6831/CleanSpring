@@ -1,4 +1,4 @@
-package com.jjm.cleanspring.infrastructure.config;
+package com.jjm.cleanspring.infrastructure.config.mongo;
 
 import com.jjm.cleanspring.infrastructure.converter.DateToLocalDateTimeConverter;
 import com.jjm.cleanspring.infrastructure.converter.LocalDateTimeToDateConverter;
