@@ -63,7 +63,7 @@ public class UserController {
 
     @Operation(summary = "사용자 수정", description = "사용자의 정보를 수정합니다.")
     @PostMapping("/update")
-    public ResponseEntity<ResponseDto<Object>> updateUser(@RequestBody UpdateUserRequest request) {
+    public ResponseEntity<ResponseDto<UserResponse>> updateUser(@RequestBody UpdateUserRequest request) {
         UpdateUserCommand command = UpdateUserCommand.builder()
                                                      .id(request.id())
                                                      .name(request.name())
