@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -55,19 +54,13 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public void updateUser(UpdateUserCommand command) {
+    public User updateUser(UpdateUserCommand command) {
         User user = command.toUser();
-        User storedUser = userPort.findById(user.getId());
 
-        if (storedUser == null) {
+        if (!userPort.existsById(user.getId())) {
             throw new NoSuchElementException("해당 유저는 존재하지 않습니다.");
         }
 
-        // 업데이트 할 수 있는 모든 필드 갱신
-        storedUser.setName(user.getName());
-        storedUser.setEmail(user.getEmail());
-        storedUser.setUpdatedAt(LocalDateTime.now());
-
-        userPort.updateUser(user);
+        return userPort.updateUser(user);
     }
 }

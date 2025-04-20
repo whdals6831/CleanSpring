@@ -44,17 +44,17 @@ public class RefreshTokenAdapter implements RefreshTokenPort {
 
     @Override
     public RefreshToken updateTokenUsage(String token) {
-        RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(token)
-                                                                      .orElse(null);
+        RefreshTokenEntity storedEntity = refreshTokenRepository.findByToken(token)
+                                                                .orElse(null);
 
-        if (refreshTokenEntity == null) {
-            return null;
+        if (storedEntity == null) {
+            throw new NoSuchElementException("Token not found: " + token);
         }
 
         // 업데이트 횟수 증가
-        refreshTokenEntity.setUpdateCount(refreshTokenEntity.getUpdateCount() + 1);
+        storedEntity.setUpdateCount(storedEntity.getUpdateCount() + 1);
 
-        RefreshTokenEntity updatedEntity = refreshTokenRepository.save(refreshTokenEntity);
+        RefreshTokenEntity updatedEntity = refreshTokenRepository.save(storedEntity);
         return refreshTokenMapper.toDomain(updatedEntity);
     }
 

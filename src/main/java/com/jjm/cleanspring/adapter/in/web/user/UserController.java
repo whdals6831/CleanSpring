@@ -70,9 +70,10 @@ public class UserController {
                                                      .email(request.email())
                                                      .build();
 
-        userUseCase.updateUser(command);
+        User savedUser = userUseCase.updateUser(command);
+        UserResponse response = UserResponse.toDto(savedUser);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(ResponseDto.success());
+                             .body(ResponseDto.success(response));
     }
 }

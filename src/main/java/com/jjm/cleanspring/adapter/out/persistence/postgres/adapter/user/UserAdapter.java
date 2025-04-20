@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 @RequiredArgsConstructor
@@ -59,7 +60,19 @@ public class UserAdapter implements UserPort {
     }
 
     @Override
-    public void updateUser(User user) {
-        userRepository.save(userMapper.toEntity(user));
+    public User updateUser(User user) {
+        UserEntity storedUser = userRepository.findById(user.getId())
+                                              .orElse(null);
+
+        if (storedUser == null) {
+            throw new NoSuchElementException("User not found: " + user.getId());
+        }
+
+        // 수정할 수 있는 필드 값 갱신
+        storedUser.setName(user.getName());
+        storedUser.setEmail(user.getEmail());
+
+        UserEntity savedEntity = userRepository.save(storedUser);
+        return userMapper.toDomain(savedEntity);
     }
 }
