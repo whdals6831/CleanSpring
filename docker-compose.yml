@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: cleanspring-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: cleanspring
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./cleanspring/postgres:/var/lib/postgresql/data
+    networks:
+      - cleanspring-net
+  mongo:
+    image: mongo:latest
+    container_name: cleanspring-mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: cleanspring
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./cleanspring/mongo:/data/db
+    networks:
+      - cleanspring-net
+networks:
+  cleanspring-net:
+    driver: bridge
